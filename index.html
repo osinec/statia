@@ -565,6 +565,7 @@
                         <button id="btnQuote" title="Цитата">💜 Цитата</button>
                         <button id="btnImportantNote">⚠️ Важно</button>
                         <button id="btnLink" title="Ссылка">🔗 Ссылка</button>
+                        <button id="btnNewLine" title="Новая строка">↵ Новая строка</button>
                     </div>
                     
                     <div class="toolbar">
@@ -665,6 +666,7 @@
             const btnQuote = document.getElementById('btnQuote');
             const btnImportantNote = document.getElementById('btnImportantNote');
             const btnLink = document.getElementById('btnLink');
+            const btnNewLine = document.getElementById('btnNewLine');
             const btnTextAccent = document.getElementById('btnTextAccent');
             const btnTextWarning = document.getElementById('btnTextWarning');
             const btnBadgePrimary = document.getElementById('btnBadgePrimary');
@@ -686,10 +688,30 @@
             let currentHighlightClass = 'highlight-blue-preview';
             let selectedTextForLink = '';
             
+            // Функция для вставки новой строки
+            function insertNewLine() {
+                const start = articleContent.selectionStart;
+                const end = articleContent.selectionEnd;
+                
+                // Вставляем тег <br> в текущую позицию курсора
+                const newText = articleContent.value.substring(0, start) + '<br>' + articleContent.value.substring(end);
+                articleContent.value = newText;
+                
+                // Устанавливаем курсор после вставленного <br>
+                articleContent.selectionStart = start + 4;
+                articleContent.selectionEnd = start + 4;
+                
+                // Фокусируем textarea
+                articleContent.focus();
+                
+                // Обновляем предпросмотр
+                updatePreview();
+            }
+            
             // Функция для сохранения форматирования переносов строк
             function processContentForJSON(content) {
-                // Сохраняем все переносы строк как есть
-                return content;
+                // Заменяем все переносы строк на HTML-теги
+                return content.replace(/\n/g, '<br>');
             }
             
             // Функции форматирования
@@ -740,6 +762,7 @@
             btnList.addEventListener('click', () => formatText('ul'));
             btnQuote.addEventListener('click', () => formatText('blockquote'));
             btnImportantNote.addEventListener('click', () => formatText('div', 'important-note'));
+            btnNewLine.addEventListener('click', insertNewLine);
             
             // Обработчик ссылки
             btnLink.addEventListener('click', function() {
