@@ -152,6 +152,8 @@
             min-height: 200px;
             resize: vertical;
             line-height: 1.6;
+            white-space: pre-wrap;
+            word-wrap: break-word;
         }
         
         .toolbar {
@@ -305,11 +307,32 @@
             box-shadow: inset 0 2px 10px rgba(0,0,0,0.05);
         }
         
+        /* Исправленные стили для выделения */
+        .text-accent {
+            color: var(--accent-color);
+            font-weight: 600;
+            border: 2px solid var(--accent-color);
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: transparent;
+        }
+        
+        .text-warning {
+            color: var(--warning-color);
+            font-weight: 600;
+            border: 2px solid var(--warning-color);
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: transparent;
+        }
+        
+        /* Градиентное выделение */
         .highlight-blue-preview {
             background: linear-gradient(90deg, rgba(52, 152, 219, 0.9) 0%, rgba(52, 152, 219, 0.3) 100%);
             padding: 3px 6px;
             border-radius: 4px;
             font-weight: 500;
+            border: none;
         }
         
         .highlight-orange-preview {
@@ -317,6 +340,7 @@
             padding: 3px 6px;
             border-radius: 4px;
             font-weight: 500;
+            border: none;
         }
         
         .important-note {
@@ -381,16 +405,6 @@
             font-size: 1.3rem;
             padding-bottom: 10px;
             border-bottom: 2px solid var(--light-color);
-        }
-        
-        .text-accent {
-            color: var(--accent-color);
-            font-weight: 600;
-        }
-        
-        .text-warning {
-            color: var(--warning-color);
-            font-weight: 600;
         }
         
         .article-image {
@@ -562,9 +576,9 @@
                     </div>
                     
                     <div class="toolbar">
-                        <span style="font-weight: 600; margin-right: 10px;">Цвет текста:</span>
-                        <button id="btnTextAccent" data-class="text-accent">💜 Акцентный</button>
-                        <button id="btnTextWarning" data-class="text-warning">🟠 Предупреждение</button>
+                        <span style="font-weight: 600; margin-right: 10px;">Стиль текста:</span>
+                        <button id="btnTextAccent" data-class="text-accent">💜 Акцентный (рамка)</button>
+                        <button id="btnTextWarning" data-class="text-warning">🟠 Предупреждение (рамка)</button>
                     </div>
                     
                     <div class="toolbar">
@@ -672,6 +686,12 @@
             let currentHighlightClass = 'highlight-blue-preview';
             let selectedTextForLink = '';
             
+            // Функция для сохранения форматирования переносов строк
+            function processContentForJSON(content) {
+                // Сохраняем все переносы строк как есть
+                return content;
+            }
+            
             // Функции форматирования
             function formatText(tag, className = '', wrapText = true, additionalAttrs = '') {
                 const start = articleContent.selectionStart;
@@ -744,7 +764,7 @@
                 }
             });
             
-            // Обработчики цвета текста
+            // Обработчики стилей текста (рамки)
             btnTextAccent.addEventListener('click', () => formatText('span', 'text-accent'));
             btnTextWarning.addEventListener('click', () => formatText('span', 'text-warning'));
             
@@ -795,7 +815,7 @@
                 const vidTitle = videoTitle.value || 'Название видео';
                 const vidUrl = videoUrl.value || 'video.mp4';
                 const artTitle = articleTitle.value || 'Заголовок статьи';
-                const content = articleContent.value || '<p>Содержание статьи</p>';
+                const content = processContentForJSON(articleContent.value) || '<p>Содержание статьи</p>';
                 
                 const videoJSON = {
                     "title": vidTitle,
