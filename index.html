@@ -3,617 +3,763 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Мастер упаковки мыслей</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <title>Редактор статей для JSON</title>
     <style>
         :root {
-            --primary: #4361ee;
-            --secondary: #3f37c9;
-            --accent: #4cc9f0;
-            --light: #f8f9fa;
-            --dark: #212529;
-            --success: #4bb543;
-            --warning: #f8961e;
-            --fixed-phrase: #2a9d8f; /* Зеленый цвет для фиксированных фраз */
+            --primary-color: #3498db;
+            --secondary-color: #2980b9;
+            --accent-color: #9b59b6;
+            --warning-color: #f39c12;
+            --success-color: #2ecc71;
+            --error-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --text-color: #333;
+            --border-radius: 8px;
+            --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
+        
         * {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
+        
         body {
-            font-family: 'Montserrat', sans-serif;
-            line-height: 1.6;
-            color: var(--dark);
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--text-color);
+            line-height: 1.6;
             min-height: 100vh;
-            padding: 2rem;
         }
+        
         .container {
-            max-width: 800px;
+            max-width: 1400px;
             margin: 0 auto;
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 30px 0;
+            border-radius: var(--border-radius);
+            margin-bottom: 40px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            position: relative;
             overflow: hidden;
         }
-        header {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            color: white;
-            padding: 2.5rem 2rem;
-            text-align: center;
+        
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, transparent 50%);
+            pointer-events: none;
         }
+        
         h1 {
-            font-family: 'Playfair Display', serif;
             font-size: 2.5rem;
-            margin-bottom: 0.5rem;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
+        
         .subtitle {
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             opacity: 0.9;
             max-width: 600px;
             margin: 0 auto;
         }
-        .content {
-            padding: 2rem;
+        
+        .app-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
         }
-        .form-step {
-            margin-bottom: 2rem;
-            animation: fadeIn 0.5s ease-out;
+        
+        @media (max-width: 1100px) {
+            .app-container {
+                grid-template-columns: 1fr;
+            }
         }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        
+        .editor-section, .preview-section {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease;
         }
-        .question {
-            margin-bottom: 1.5rem;
+        
+        .editor-section:hover, .preview-section:hover {
+            transform: translateY(-5px);
         }
+        
+        .section-title {
+            font-size: 1.6rem;
+            margin-bottom: 25px;
+            color: var(--dark-color);
+            border-bottom: 3px solid var(--light-color);
+            padding-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title::before {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 25px;
+            background: linear-gradient(to bottom, var(--primary-color), var(--secondary-color));
+            margin-right: 15px;
+            border-radius: 4px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
         label {
             display: block;
+            margin-bottom: 10px;
             font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: var(--secondary);
+            color: var(--dark-color);
             font-size: 1.1rem;
         }
-        .input-wrapper {
-            position: relative;
-            margin-bottom: 0.5rem;
-        }
-        input[type="text"], textarea {
+        
+        input, textarea, select {
             width: 100%;
-            padding: 1rem;
-            border: 2px solid #e9ecef;
-            border-radius: 8px;
+            padding: 15px 20px;
+            border: 2px solid #e1e8ed;
+            border-radius: var(--border-radius);
             font-size: 1rem;
-            font-family: inherit;
-            transition: all 0.3s ease;
-            background-color: #f8f9fa;
+            transition: all 0.3s;
+            background: #fafbfc;
         }
-        input[type="text"]:focus, textarea:focus {
+        
+        input:focus, textarea:focus, select:focus {
             outline: none;
-            border-color: var(--accent);
-            background-color: white;
-            box-shadow: 0 0 0 3px rgba(76, 201, 240, 0.2);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+            background: white;
         }
+        
         textarea {
-            min-height: 120px;
+            min-height: 200px;
             resize: vertical;
+            line-height: 1.6;
         }
-        .char-counter {
-            font-size: 0.8rem;
-            color: #6c757d;
-            text-align: right;
-        }
-        .btn {
-            display: inline-block;
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 1rem 2rem;
-            font-size: 1rem;
-            font-weight: 600;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: center;
-            text-decoration: none;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        .btn:hover {
-            background: var(--secondary);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-        }
-        .btn:active {
-            transform: translateY(0);
-        }
-        .btn-block {
-            display: block;
-            width: 100%;
-        }
-        .btn-accent {
-            background: var(--accent);
-        }
-        .btn-accent:hover {
-            background: #3aa8d8;
-        }
-        .btn-success {
-            background: var(--success);
-        }
-        .btn-success:hover {
-            background: #3a9a34;
-        }
-        .btn-warning {
-            background: var(--warning);
-        }
-        .btn-warning:hover {
-            background: #e07d0e;
-        }
-        .btn-secondary {
-            background: #6c757d;
-        }
-        .btn-secondary:hover {
-            background: #5a6268;
-        }
-        .result-container {
-            display: none;
-            margin-top: 2rem;
-            padding: 2rem;
-            background: #f8f9fa;
-            border-radius: 12px;
-            border-left: 5px solid var(--primary);
-        }
-        .result-title {
-            font-family: 'Playfair Display', serif;
-            color: var(--secondary);
-            margin-bottom: 1rem;
-            font-size: 1.8rem;
-        }
-        .result-content {
-            white-space: pre-line;
-            line-height: 1.8;
-            margin-bottom: 1.5rem;
-        }
-        /* Новый стиль для фиксированных фраз */
-        .fixed-phrase {
-            color: var(--fixed-phrase);
-            font-weight: 600;
-        }
-        /* Новый стиль для пояснительной надписи */
-        .explanation {
-            margin-top: 1rem;
-            padding: 1rem;
-            background-color: #e8f4f3;
-            border-radius: 8px;
-            border-left: 4px solid var(--fixed-phrase);
-            font-size: 0.9rem;
-            color: #333;
-        }
-        .explanation strong {
-            color: var(--fixed-phrase);
-        }
-        .progress-container {
-            width: 100%;
-            height: 8px;
-            background: #e9ecef;
-            border-radius: 4px;
-            margin-bottom: 2rem;
-            overflow: hidden;
-        }
-        .progress-bar {
-            height: 100%;
-            background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
-            width: 14.28%;
-            transition: width 0.4s ease;
-        }
-        .step-indicator {
+        
+        .toolbar {
             display: flex;
-            justify-content: space-between;
-            margin-bottom: 1.5rem;
-        }
-        .step {
-            text-align: center;
-            flex: 1;
-            position: relative;
-            cursor: pointer;
-        }
-        .step-number {
-            width: 36px;
-            height: 36px;
-            background: #e9ecef;
-            color: #6c757d;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 0.5rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-        .step.active .step-number {
-            background: var(--primary);
-            color: white;
-        }
-        .step.completed .step-number {
-            background: var(--success);
-            color: white;
-        }
-        .step-label {
-            font-size: 0.9rem;
-            color: #6c757d;
-        }
-        .step.active .step-label {
-            color: var(--dark);
-            font-weight: 600;
-        }
-        .step.completed .step-label {
-            color: var(--dark);
-        }
-        .tooltip {
-            position: relative;
-            display: inline-block;
-            margin-left: 0.5rem;
-            cursor: pointer;
-        }
-        .tooltip-icon {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 20px;
-            height: 20px;
-            background: var(--accent);
-            color: white;
-            border-radius: 50%;
-            font-size: 0.8rem;
-            font-weight: bold;
-        }
-        .tooltip-text {
-            visibility: hidden;
-            width: 200px;
-            background-color: var(--dark);
-            color: white;
-            text-align: center;
-            border-radius: 6px;
-            padding: 0.5rem;
-            position: absolute;
-            z-index: 1;
-            bottom: 125%;
-            left: 50%;
-            transform: translateX(-50%);
-            opacity: 0;
-            transition: opacity 0.3s;
-            font-size: 0.9rem;
-            font-weight: normal;
-        }
-        .tooltip:hover .tooltip-text {
-            visibility: visible;
-            opacity: 1;
-        }
-        .flex-buttons {
-            display: flex;
-            justify-content: space-between;
-            gap: 1rem;
             flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: var(--light-color);
+            border-radius: var(--border-radius);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
         }
+        
+        .toolbar button {
+            padding: 10px 15px;
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .toolbar button:hover {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+        
+        .toolbar button.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        .highlight-options {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+            width: 100%;
+        }
+        
+        .highlight-option {
+            padding: 10px 20px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border: 2px solid transparent;
+            flex: 1;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .highlight-option.active {
+            border-color: var(--dark-color);
+            transform: scale(1.05);
+        }
+        
+        .highlight-blue {
+            background: linear-gradient(90deg, rgba(52, 152, 219, 0.9) 0%, rgba(52, 152, 219, 0.3) 100%);
+            color: white;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+        
+        .highlight-orange {
+            background: linear-gradient(90deg, rgba(243, 156, 18, 0.9) 0%, rgba(243, 156, 18, 0.3) 100%);
+            color: white;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+        
+        .json-output {
+            background: var(--dark-color);
+            color: var(--light-color);
+            padding: 25px;
+            border-radius: var(--border-radius);
+            margin-top: 25px;
+            font-family: 'Fira Code', monospace;
+            white-space: pre-wrap;
+            max-height: 400px;
+            overflow-y: auto;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.3);
+            border: 1px solid #34495e;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            flex: 1;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(52, 152, 219, 0.4);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+            color: white;
+            box-shadow: 0 4px 10px rgba(149, 165, 166, 0.3);
+        }
+        
+        .btn-secondary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(149, 165, 166, 0.4);
+        }
+        
+        .btn-copy {
+            background: linear-gradient(135deg, var(--success-color), #27ae60);
+            color: white;
+            box-shadow: 0 4px 10px rgba(46, 204, 113, 0.3);
+        }
+        
+        .btn-copy:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(46, 204, 113, 0.4);
+        }
+        
+        .preview-content {
+            border: 2px solid #e1e8ed;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            min-height: 500px;
+            background: white;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .highlight-blue-preview {
+            background: linear-gradient(90deg, rgba(52, 152, 219, 0.9) 0%, rgba(52, 152, 219, 0.3) 100%);
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+        
+        .highlight-orange-preview {
+            background: linear-gradient(90deg, rgba(243, 156, 18, 0.9) 0%, rgba(243, 156, 18, 0.3) 100%);
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+        
+        .important-note {
+            padding: 20px;
+            border: 2px solid var(--warning-color);
+            margin: 20px 0;
+            background: linear-gradient(135deg, #fffaf0, #fff5e6);
+            border-radius: var(--border-radius);
+            box-shadow: 0 2px 8px rgba(243, 156, 18, 0.1);
+        }
+        
+        .article-quote {
+            font-style: italic;
+            padding: 20px 25px;
+            background: linear-gradient(135deg, #f8f0ff, #f0e6ff);
+            border-radius: var(--border-radius);
+            margin: 20px 0;
+            border-left: 5px solid var(--accent-color);
+            box-shadow: 0 2px 8px rgba(155, 89, 182, 0.1);
+            color: #6c3483;
+        }
+        
+        .article-list {
+            margin: 20px 0;
+            padding-left: 25px;
+        }
+        
+        .article-list li {
+            margin-bottom: 12px;
+            padding-left: 10px;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-right: 10px;
+            color: white;
+        }
+        
+        .badge-primary { 
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); 
+        }
+        .badge-accent { 
+            background: linear-gradient(135deg, var(--accent-color), #8e44ad); 
+        }
+        .badge-success { 
+            background: linear-gradient(135deg, var(--success-color), #27ae60); 
+        }
+        .badge-warning { 
+            background: linear-gradient(135deg, var(--warning-color), #e67e22); 
+        }
+        .badge-error { 
+            background: linear-gradient(135deg, var(--error-color), #c0392b); 
+        }
+        
+        .article-subtitle {
+            margin: 25px 0 15px;
+            color: var(--dark-color);
+            font-size: 1.3rem;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--light-color);
+        }
+        
+        .text-accent {
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+        
+        .text-warning {
+            color: var(--warning-color);
+            font-weight: 600;
+        }
+        
+        .article-image {
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .article-image img {
+            max-width: 100%;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+        
+        .copy-notification {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, var(--success-color), #27ae60);
+            color: white;
+            padding: 15px 25px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            opacity: 0;
+            transition: opacity 0.3s, transform 0.3s;
+            transform: translateX(100px);
+            z-index: 1000;
+            font-weight: 600;
+        }
+        
+        .copy-notification.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        .video-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        
         @media (max-width: 768px) {
-            body {
-                padding: 1rem;
+            .video-info {
+                grid-template-columns: 1fr;
             }
-            h1 {
-                font-size: 2rem;
-            }
-            .container {
-                border-radius: 12px;
-            }
-            header {
-                padding: 1.5rem 1rem;
-            }
-            .content {
-                padding: 1.5rem;
-            }
-            .step-label {
-                display: none;
-            }
-            .btn {
-                padding: 0.8rem 1rem;
-                font-size: 0.9rem;
-            }
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+        }
+        
+        .icon {
+            font-size: 1.2rem;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>Мастер упаковки мыслей</h1>
-            <p class="subtitle">Донеси любую мысль ёмко и красиво</p>
+            <h1>Редактор статей для JSON</h1>
+            <p class="subtitle">Создавайте красивые статьи с градиентным выделением и получайте готовый JSON</p>
         </header>
-        <div class="content">
-            <div class="progress-container">
-                <div class="progress-bar" id="progressBar"></div>
-            </div>
-            <div class="step-indicator">
-                <div class="step active" id="step1-indicator" onclick="goToStep(1)">
-                    <div class="step-number">1</div>
-                    <div class="step-label">Суть</div>
-                </div>
-                <div class="step" id="step2-indicator" onclick="goToStep(2)">
-                    <div class="step-number">2</div>
-                    <div class="step-label">3 слова</div>
-                </div>
-                <div class="step" id="step3-indicator" onclick="goToStep(3)">
-                    <div class="step-number">3</div>
-                    <div class="step-label">Аудитория</div>
-                </div>
-                <div class="step" id="step4-indicator" onclick="goToStep(4)">
-                    <div class="step-number">4</div>
-                    <div class="step-label">Цель</div>
-                </div>
-                <div class="step" id="step5-indicator" onclick="goToStep(5)">
-                    <div class="step-number">5</div>
-                    <div class="step-label">Важность</div>
-                </div>
-                <div class="step" id="step6-indicator" onclick="goToStep(6)">
-                    <div class="step-number">6</div>
-                    <div class="step-label">Метафора</div>
-                </div>
-                <div class="step" id="step7-indicator" onclick="goToStep(7)">
-                    <div class="step-number">7</div>
-                    <div class="step-label">Действия</div>
-                </div>
-            </div>
-            <form id="thoughtForm">
-                <div class="form-step" id="step1-content">
-                    <div class="question">
-                        <label for="coreMessage">
-                            Что вы хотите донести?
-                            <span class="tooltip">
-                                <span class="tooltip-icon">?</span>
-                                <span class="tooltip-text">Опиши то, что хочешь рассказать или донести.</span>
-                            </span>
-                        </label>
-                        <div class="input-wrapper">
-                            <textarea id="coreMessage" placeholder="Пример: Я хочу донести, что наука очень полезна и интересна. С помощью нее возможно многое."></textarea>
-                        </div>
-                        <div class="char-counter"><span id="coreMessageCount">0</span>/200</div>
+        
+        <div class="app-container">
+            <section class="editor-section">
+                <h2 class="section-title">Редактор статьи</h2>
+                
+                <div class="video-info">
+                    <div class="form-group">
+                        <label for="videoId">ID видео</label>
+                        <input type="number" id="videoId" placeholder="Введите ID видео" value="1">
                     </div>
-                    <button type="button" class="btn btn-block" onclick="nextStep(2)">Далее</button>
+                    
+                    <div class="form-group">
+                        <label for="videoTitle">Название видео</label>
+                        <input type="text" id="videoTitle" placeholder="Введите название видео" value="Цифровая графика">
+                    </div>
                 </div>
-                <div class="form-step" id="step2-content" style="display:none">
-                    <div class="question">
-                        <label for="threeWords">
-                            Упакуйте суть в 3 ключевых слова:
-                            <span class="tooltip">
-                                <span class="tooltip-icon">?</span>
-                                <span class="tooltip-text"> Сформиулируй идею всего в 3-х словах.</span>
-                            </span> 
-                        </label>
-                        <div class="input-wrapper">
-                            <input type="text" id="threeWords" placeholder="Пример: Наука полезна и интересна.">
+                
+                <div class="form-group">
+                    <label for="videoUrl">URL видео</label>
+                    <input type="url" id="videoUrl" placeholder="https://example.com/video.mp4" value="digital-art.mp4">
+                </div>
+                
+                <div class="form-group">
+                    <label for="articleTitle">Заголовок статьи</label>
+                    <input type="text" id="articleTitle" placeholder="Введите заголовок статьи" value="Эволюция цифрового искусства: от пикселей к нейросетям">
+                </div>
+                
+                <div class="form-group">
+                    <label for="articleContent">Содержание статьи</label>
+                    
+                    <div class="toolbar">
+                        <button id="btnBold" title="Жирный текст"><span class="icon"><b>B</b></span> Жирный</button>
+                        <button id="btnItalic" title="Курсив"><span class="icon"><i>I</i></span> Курсив</button>
+                        <button id="btnParagraph" title="Параграф"><span class="icon">¶</span> Параграф</button>
+                        <button id="btnSubtitle" title="Подзаголовок">📝 Подзаголовок</button>
+                    </div>
+                    
+                    <div class="toolbar">
+                        <button id="btnList" title="Список">📋 Список</button>
+                        <button id="btnQuote" title="Цитата">💜 Цитата</button>
+                        <button id="btnImportantNote">⚠️ Важно</button>
+                        <button id="btnImage">🖼️ Изображение</button>
+                    </div>
+                    
+                    <div class="toolbar">
+                        <span style="font-weight: 600; margin-right: 10px;">Выделение градиентом:</span>
+                        <div class="highlight-options">
+                            <div class="highlight-option highlight-blue active" data-class="highlight-blue-preview">🔵 Синий градиент</div>
+                            <div class="highlight-option highlight-orange" data-class="highlight-orange-preview">🟠 Оранжевый градиент</div>
                         </div>
                     </div>
-                    <div class="flex-buttons">
-                        <button type="button" class="btn" onclick="prevStep(1)">Назад</button>
-                        <button type="button" class="btn btn-accent" onclick="nextStep(3)">Далее</button>
+                    
+                    <div class="toolbar">
+                        <span style="font-weight: 600; margin-right: 10px;">Цвет текста:</span>
+                        <button id="btnTextAccent" data-class="text-accent">💜 Акцентный</button>
+                        <button id="btnTextWarning" data-class="text-warning">🟠 Предупреждение</button>
                     </div>
+                    
+                    <div class="toolbar">
+                        <span style="font-weight: 600; margin-right: 10px;">Бейджи:</span>
+                        <button id="btnBadgePrimary" data-class="badge-primary">🔵 Основной</button>
+                        <button id="btnBadgeAccent" data-class="badge-accent">💜 Акцентный</button>
+                        <button id="btnBadgeSuccess" data-class="badge-success">✅ Успех</button>
+                        <button id="btnBadgeWarning" data-class="badge-warning">⚠️ Предупреждение</button>
+                        <button id="btnBadgeError" data-class="badge-error">❌ Ошибка</button>
+                    </div>
+                    
+                    <textarea id="articleContent" placeholder="Начните вводить текст статьи..."><p>Цифровое искусство прошло впечатляющий путь от простых <span class="text-accent">8-битных изображений</span> до сложнейших произведений, созданных искусственным интеллектом.</p>
+<h3 class="article-subtitle">Ключевые этапы развития</h3>
+<p>История цифрового искусства насчитывает несколько десятилетий, каждый из которых принес свои уникальные технологии и стили:</p>
+<ul class="article-list">
+<li><span class="badge badge-primary">1980-е</span> — появление первых графических редакторов</li>
+<li><span class="badge badge-accent">1990-е</span> — развитие 3D-графики и анимации</li>
+<li><span class="badge badge-success">2000-е</span> — расцвет цифровой живописи</li>
+<li><span class="badge badge-warning">2010-е</span> — интерактивное и генеративное искусство</li>
+<li><span class="badge badge-error">2020-е</span> — искусственный интеллект в творчестве</li>
+</ul>
+<div class="important-note">
+<p><strong>Интересный факт:</strong> Первое цифровое искусство было создано в 1960-х годах, когда компьютеры занимали целые комнаты, а для создания простого изображения требовались дни программирования.</p>
+</div>
+<h3 class="article-subtitle">Будущее цифрового искусства</h3>
+<p>С развитием технологий <span class="text-warning">VR и AR</span> искусство становится все более иммерсивным, позволяя зрителю буквально погружаться в произведение.</p></textarea>
                 </div>
-                <div class="form-step" id="step3-content" style="display:none">
-                    <div class="question">
-                        <label for="audience">
-                            Кто твоя аудитория?
-                            <span class="tooltip">
-                                <span class="tooltip-icon">?</span>
-                                <span class="tooltip-text">Кто те люди, которые тебя будут слушать или тот человек, кому ты это скажешь</span>
-                            </span>
-                        </label>
-                        <div class="input-wrapper">
-                            <input type="text" id="audience" placeholder="Пример: Учителя, Брат, Спортсмены...">
-                        </div>
-                    </div>
-                    <div class="flex-buttons">
-                        <button type="button" class="btn" onclick="prevStep(2)">Назад</button>
-                        <button type="button" class="btn btn-accent" onclick="nextStep(4)">Далее</button>
-                    </div>
+                
+                <div class="actions">
+                    <button class="btn btn-primary" id="btnGenerate">
+                        <span class="icon">🔄</span> Сгенерировать JSON
+                    </button>
+                    <button class="btn btn-secondary" id="btnReset">
+                        <span class="icon">🗑️</span> Сбросить
+                    </button>
                 </div>
-                <div class="form-step" id="step4-content" style="display:none">
-                    <div class="question">
-                        <label for="goal">
-                           Цель аудитории?
-                            <span class="tooltip">
-                                <span class="tooltip-icon">?</span>
-                                <span class="tooltip-text">Чего хочет твоя аудитори?</span>
-                            </span>
-                        </label>
-                        <div class="input-wrapper">
-                            <input type="text" id="goal" placeholder="Пример: Больше продавать, больше учеников, лучше управлять...">
-                        </div>
+                
+                <div class="form-group">
+                    <label for="jsonOutput">JSON для копирования</label>
+                    <div class="json-output" id="jsonOutput">
+// Сгенерированный JSON появится здесь
                     </div>
-                    <div class="flex-buttons">
-                        <button type="button" class="btn" onclick="prevStep(3)">Назад</button>
-                        <button type="button" class="btn btn-accent" onclick="nextStep(5)">Далее</button>
-                    </div>
+                    <button class="btn btn-copy" id="btnCopy">
+                        <span class="icon">📋</span> Копировать JSON
+                    </button>
                 </div>
-                <div class="form-step" id="step5-content" style="display:none">
-                    <div class="question">
-                        <label for="importance">
-                        Что будет если этого не сделать\не понять?
-                            <span class="tooltip">
-                                <span class="tooltip-icon">?</span>
-                                <span class="tooltip-text">Какие последствия, если этого не сделать?</span>
-                            </span>
-                        </label>
-                        <div class="input-wrapper">
-                            <textarea id="importance" placeholder=" Если вы этого не поймете,то..."></textarea>
-                        </div>
-                        <div class="char-counter"><span id="importanceCount">0</span>/300</div>
-                    </div>
-                    <div class="flex-buttons">
-                        <button type="button" class="btn" onclick="prevStep(4)">Назад</button>
-                        <button type="button" class="btn btn-accent" onclick="nextStep(6)">Далее</button>
-                    </div>
+            </section>
+            
+            <section class="preview-section">
+                <h2 class="section-title">Предпросмотр статьи</h2>
+                <div class="preview-content" id="previewContent">
+                    <p>Предпросмотр статьи появится здесь</p>
                 </div>
-                <div class="form-step" id="step6-content" style="display:none">
-                    <div class="question">
-                        <label for="metaphor">
-                            Метафора, аналогия или пример:
-                            <span class="tooltip">
-                                <span class="tooltip-icon">?</span>
-                                <span class="tooltip-text">Найти метафору, аналогию или историю к тому, что ты говоришь</span>
-                            </span>
-                        </label>
-                        <div class="input-wrapper">
-                            <input type="text" id="metaphor" placeholder="Пример: Если бы моисей не убедил евреев пойти за ним, не было бы евреев">
-                        </div>
-                    </div>
-                    <div class="flex-buttons">
-                        <button type="button" class="btn" onclick="prevStep(5)">Назад</button>
-                        <button type="button" class="btn btn-accent" onclick="nextStep(7)">Далее</button>
-                    </div>
-                </div>
-                <div class="form-step" id="step7-content" style="display:none">
-                    <div class="question">
-                        <label for="goal2">
-                           Что нужно сделать\понять аудитории?
-                            <span class="tooltip">
-                                <span class="tooltip-icon">?</span>
-                                <span class="tooltip-text">Что нужно сделать\понять аудитории</span>
-                            </span>
-                        </label>
-                        <div class="input-wrapper">
-                            <input type="text" id="goal2" placeholder="Поймите, что...">
-                        </div>
-                    </div>
-                    <div class="flex-buttons">
-                        <button type="button" class="btn" onclick="prevStep(6)">Назад</button>
-                        <button type="button" class="btn btn-accent" id="generateBtn">Завершить</button>
-                    </div>
-                </div>
-            </form>
-            <div class="result-container" id="result">
-                <h2 class="result-title">Изящная мысль</h2>
-                <div class="result-content" id="output"></div>
-                <!-- Добавлена пояснительная надпись -->
-                <div class="explanation">
-                    <strong>Фразы, выделенные зеленым цветом,</strong> являются фиксированными. Вы можете скопировать результат и заменить их на любые другие по вашему усмотрению.
-                </div>
-                <div class="flex-buttons">
-                    <!-- Кнопка удалена -->
-                    <button class="btn btn-warning" id="regenerateBtn">Изменить данные</button>
-                    <button class="btn btn-success" id="copyBtn">Копировать результат</button>
-                </div>
-            </div>
+            </section>
         </div>
     </div>
+    
+    <div class="copy-notification" id="copyNotification">✅ JSON скопирован в буфер обмена!</div>
+
     <script>
-        // Текущий активный шаг
-        let currentStep = 1;
-        // Храним введенные данные
-        let inputData = {
-            coreMessage: '',
-            threeWords: '',
-            audience: '',
-            goal: '',
-            importance: '',
-            metaphor: '',
-            goal2: ''
-        };
-        // Обработчики событий для подсчета символов
-        document.getElementById('coreMessage').addEventListener('input', function() {
-            document.getElementById('coreMessageCount').textContent = this.value.length;
-        });
-        document.getElementById('importance').addEventListener('input', function() {
-            document.getElementById('importanceCount').textContent = this.value.length;
-        });
-        // Навигация по шагам
-        function nextStep(step) {
-            if (step > 7) return;
-            currentStep = step;
-            updateFormSteps();
-        }
-        function prevStep(step) { 
-            if (step < 1) return;
-            currentStep = step;
-            updateFormSteps();
-        }
-        function goToStep(step) {
-            if (step < 1 || step > 7) return;
-            currentStep = step;
-            updateFormSteps();
-        }
-        function updateFormSteps() {
-            // Скрыть все шаги
-            document.querySelectorAll('.form-step').forEach(step => {
-                step.style.display = 'none';
+        document.addEventListener('DOMContentLoaded', function() {
+            // Элементы DOM
+            const videoId = document.getElementById('videoId');
+            const videoTitle = document.getElementById('videoTitle');
+            const videoUrl = document.getElementById('videoUrl');
+            const articleTitle = document.getElementById('articleTitle');
+            const articleContent = document.getElementById('articleContent');
+            const jsonOutput = document.getElementById('jsonOutput');
+            const previewContent = document.getElementById('previewContent');
+            const btnGenerate = document.getElementById('btnGenerate');
+            const btnReset = document.getElementById('btnReset');
+            const btnCopy = document.getElementById('btnCopy');
+            const copyNotification = document.getElementById('copyNotification');
+            
+            // Элементы панели инструментов
+            const btnBold = document.getElementById('btnBold');
+            const btnItalic = document.getElementById('btnItalic');
+            const btnParagraph = document.getElementById('btnParagraph');
+            const btnSubtitle = document.getElementById('btnSubtitle');
+            const btnList = document.getElementById('btnList');
+            const btnQuote = document.getElementById('btnQuote');
+            const btnImportantNote = document.getElementById('btnImportantNote');
+            const btnImage = document.getElementById('btnImage');
+            const btnTextAccent = document.getElementById('btnTextAccent');
+            const btnTextWarning = document.getElementById('btnTextWarning');
+            const btnBadgePrimary = document.getElementById('btnBadgePrimary');
+            const btnBadgeAccent = document.getElementById('btnBadgeAccent');
+            const btnBadgeSuccess = document.getElementById('btnBadgeSuccess');
+            const btnBadgeWarning = document.getElementById('btnBadgeWarning');
+            const btnBadgeError = document.getElementById('btnBadgeError');
+            
+            // Опции выделения
+            const highlightOptions = document.querySelectorAll('.highlight-option');
+            
+            let currentHighlightClass = 'highlight-blue-preview';
+            
+            // Функции форматирования
+            function formatText(tag, className = '', wrapText = true) {
+                const start = articleContent.selectionStart;
+                const end = articleContent.selectionEnd;
+                const selectedText = articleContent.value.substring(start, end);
+                
+                if (selectedText || !wrapText) {
+                    let formattedText = '';
+                    
+                    if (tag === 'span' && className) {
+                        formattedText = `<span class="${className}">${selectedText}</span>`;
+                    } else if (tag === 'h3') {
+                        formattedText = `<h3 class="article-subtitle">${selectedText}</h3>`;
+                    } else if (tag === 'blockquote') {
+                        formattedText = `<div class="article-quote">${selectedText}</div>`;
+                    } else if (tag === 'div') {
+                        if (className === 'important-note') {
+                            formattedText = `<div class="important-note"><p><strong>Интересный факт:</strong> ${selectedText}</p></div>`;
+                        }
+                    } else if (tag === 'ul') {
+                        formattedText = `<ul class="article-list"><li><span class="badge badge-primary">1</span> ${selectedText}</li></ul>`;
+                    } else if (tag === 'img') {
+                        formattedText = `<div class="article-image"><img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Описание изображения"></div>`;
+                    } else if (tag === 'badge') {
+                        formattedText = `<span class="badge ${className}">${selectedText}</span>`;
+                    } else {
+                        formattedText = `<${tag}>${selectedText}</${tag}>`;
+                    }
+                    
+                    const newText = wrapText 
+                        ? articleContent.value.substring(0, start) + formattedText + articleContent.value.substring(end)
+                        : formattedText;
+                    
+                    articleContent.value = newText;
+                    
+                    // Обновляем предпросмотр
+                    updatePreview();
+                }
+            }
+            
+            // Обработчики кнопок форматирования
+            btnBold.addEventListener('click', () => formatText('strong'));
+            btnItalic.addEventListener('click', () => formatText('em'));
+            btnParagraph.addEventListener('click', () => formatText('p'));
+            btnSubtitle.addEventListener('click', () => formatText('h3'));
+            btnList.addEventListener('click', () => formatText('ul'));
+            btnQuote.addEventListener('click', () => formatText('blockquote'));
+            btnImportantNote.addEventListener('click', () => formatText('div', 'important-note'));
+            btnImage.addEventListener('click', () => formatText('img', '', false));
+            
+            // Обработчики цвета текста
+            btnTextAccent.addEventListener('click', () => formatText('span', 'text-accent'));
+            btnTextWarning.addEventListener('click', () => formatText('span', 'text-warning'));
+            
+            // Обработчики бейджей
+            btnBadgePrimary.addEventListener('click', () => formatText('badge', 'badge-primary'));
+            btnBadgeAccent.addEventListener('click', () => formatText('badge', 'badge-accent'));
+            btnBadgeSuccess.addEventListener('click', () => formatText('badge', 'badge-success'));
+            btnBadgeWarning.addEventListener('click', () => formatText('badge', 'badge-warning'));
+            btnBadgeError.addEventListener('click', () => formatText('badge', 'badge-error'));
+            
+            // Обработчик выделения градиентом
+            function applyHighlight() {
+                formatText('span', currentHighlightClass);
+            }
+            
+            // Обработчики выбора типа выделения
+            highlightOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    highlightOptions.forEach(opt => opt.classList.remove('active'));
+                    this.classList.add('active');
+                    currentHighlightClass = this.getAttribute('data-class');
+                    
+                    // Применяем выделение к выбранному тексту
+                    applyHighlight();
+                });
             });
-            // Показать текущий шаг
-            document.querySelector(`#step${currentStep}-content`).style.display = 'block';
-            // Обновить индикаторы шагов
-            document.querySelectorAll('.step').forEach((step, index) => {
-                step.classList.remove('active', 'completed');
-                if (index + 1 === currentStep) {
-                    step.classList.add('active');
-                } else if (index + 1 < currentStep) {
-                    step.classList.add('completed');
+            
+            // Обновление предпросмотра при вводе
+            articleContent.addEventListener('input', updatePreview);
+            articleTitle.addEventListener('input', updatePreview);
+            videoTitle.addEventListener('input', updatePreview);
+            
+            // Функция обновления предпросмотра
+            function updatePreview() {
+                const vidTitle = videoTitle.value || 'Название видео';
+                const artTitle = articleTitle.value || 'Заголовок статьи';
+                const content = articleContent.value || '<p>Содержание статьи</p>';
+                
+                previewContent.innerHTML = `
+                    <h2>${vidTitle}</h2>
+                    <h3>${artTitle}</h3>
+                    <div class="article-text">${content}</div>
+                `;
+            }
+            
+            // Генерация JSON
+            btnGenerate.addEventListener('click', function() {
+                const vidId = videoId.value || '1';
+                const vidTitle = videoTitle.value || 'Название видео';
+                const vidUrl = videoUrl.value || 'video.mp4';
+                const artTitle = articleTitle.value || 'Заголовок статьи';
+                const content = articleContent.value || '<p>Содержание статьи</p>';
+                
+                const videoJSON = {
+                    "id": parseInt(vidId),
+                    "title": vidTitle,
+                    "videoUrl": vidUrl,
+                    "article": {
+                        "title": artTitle,
+                        "content": `<div class="article-text">\n${content}\n</div>`
+                    }
+                };
+                
+                jsonOutput.textContent = JSON.stringify(videoJSON, null, 4);
+            });
+            
+            // Копирование JSON
+            btnCopy.addEventListener('click', function() {
+                const jsonText = jsonOutput.textContent;
+                
+                if (jsonText && jsonText !== '// Сгенерированный JSON появится здесь') {
+                    navigator.clipboard.writeText(jsonText).then(() => {
+                        copyNotification.classList.add('show');
+                        setTimeout(() => {
+                            copyNotification.classList.remove('show');
+                        }, 3000);
+                    });
                 }
             });
-            // Обновить прогресс-бар
-            document.getElementById('progressBar').style.width = `${(currentStep-1)*14.28}%`;
-            // Прокрутить к верху формы
-            document.querySelector('.content').scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-        // Генерация результата
-        function generateResult() {
-            if (!inputData.coreMessage || !inputData.threeWords || !inputData.audience || 
-                !inputData.goal || !inputData.importance || !inputData.metaphor || !inputData.goal2) {
-                alert('Пожалуйста, заполните все поля перед генерацией');
-                return;
-            }
-            // Формируем финальный текст по заданной структуре с выделением фиксированных фраз
-            const output = `<span class="fixed-phrase">Я хочу, чтобы вы поняли,</span> ${inputData.threeWords}. <span class="fixed-phrase">Если вы этого не поймете,</span> ${inputData.importance}. ${inputData.metaphor}. <span class="fixed-phrase">Поэтому, если вам важно</span> ${inputData.goal}, <span class="fixed-phrase">поймите,</span> ${inputData.goal2}.`;
-            document.getElementById('output').innerHTML = output;
-            document.getElementById('result').style.display = 'block';
-            // Прокрутка к результату
-            document.getElementById('result').scrollIntoView({ behavior: 'smooth' });
-        }
-        document.getElementById('generateBtn').addEventListener('click', function() {
-            // Сохраняем введенные данные
-            inputData = {
-                coreMessage: document.getElementById('coreMessage').value.trim(),
-                threeWords: document.getElementById('threeWords').value.trim(),
-                audience: document.getElementById('audience').value.trim(),
-                goal: document.getElementById('goal').value.trim(),
-                importance: document.getElementById('importance').value.trim(),
-                metaphor: document.getElementById('metaphor').value.trim(),
-                goal2: document.getElementById('goal2').value.trim()
-            };
-            generateResult();
-            // Завершаем прогресс
-            document.getElementById('progressBar').style.width = '100%';
-            document.querySelector('#step7-indicator').classList.add('completed');
-        });
-        // Кнопка "Изменить данные"
-        document.getElementById('regenerateBtn').addEventListener('click', function() {
-            document.getElementById('result').style.display = 'none';
-            currentStep = 1;
-            updateFormSteps();
-        });
-        // Копирование результата
-        document.getElementById('copyBtn').addEventListener('click', function() {
-            // Получаем текст без HTML тегов для копирования
-            const outputText = document.getElementById('output').innerText;
-            navigator.clipboard.writeText(outputText).then(function() {
-                const originalText = this.innerText;
-                this.innerText = 'Скопировано!';
-                setTimeout(() => {
-                    this.innerText = originalText;
-                }, 2000);
-            }.bind(this), function() {
-                alert('Не удалось скопировать текст. Попробуйте выделить и скопировать вручную.');
+            
+            // Сброс формы
+            btnReset.addEventListener('click', function() {
+                videoId.value = '';
+                videoTitle.value = '';
+                videoUrl.value = '';
+                articleTitle.value = '';
+                articleContent.value = '';
+                jsonOutput.textContent = '// Сгенерированный JSON появится здесь';
+                previewContent.innerHTML = '<p>Предпросмотр статьи появится здесь</p>';
             });
+            
+            // Инициализация предпросмотра
+            updatePreview();
+            
+            // Автогенерация JSON при загрузке
+            setTimeout(() => {
+                btnGenerate.click();
+            }, 500);
         });
-        // Инициализация формы
-        updateFormSteps();
     </script>
 </body>
 </html>
