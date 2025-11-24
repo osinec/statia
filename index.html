@@ -1,21 +1,862 @@
-{
-  "videos": [
-    {
-      "title": "Лидерство во льдах",
-      "videoUrl": "urban-sunsets.mp4",
-      "article": {
-        "title": "Великие законы лидерства от великого мореплавателя",
-        "content": "<div class=\"article-text\">\n  <div class=\"frame-orange glow-effect\">\n    <div class=\"quote-icon\">❝</div>\n    <em>Каждый раз когда случается непонятная и пугающая ситуация глаза<br>\n    людей мечутся из угла в угол в поисках того, кто тверд, решителен,<br>\n    деятелен. В поисках того, за кем можно идти. Не важно куда.... просто<br>\n    идти.</em>\n    <div class=\"quote-author\">— Закон лидерства</div>\n  </div>\n  \n  <div class=\"floating-section\">\n    <p>Случаются моменты, когда твой мир сужается до размера льдины, которая где-то дрейфует в океане. Где есть только ты, твоя команда, ищущая в тебе ответы и никакой поддержки из вне. Ты и сам-то не до конца понимаешь что делать - но что-то делаешь, чтобы передать дух другим.</p>\n  </div>\n  \n  <div class=\"section-divider\">⚡</div>\n  \n  <h3 class=\"article-subtitle gradient-text\">Лидерству можно научиться</h3>\n  \n  <div class=\"animated-card\">\n    <p>Лидерство, как и большинство других качеств, что-то значат, да и<br>\n    вообще существуют только благодаря тому, что они к чему-то<br>\n    применимы. Характеристика «Мужчина» применима именно потому,<br>\n    что есть «Женщина». Характеристика «Ум» применима потому, что<br>\n    есть задача, к которой это требуется. Точно также с характеристикой<br>\n    «Лидерство»... Она применима, так как есть люди.</p>\n  </div>\n  \n  <div class=\"particles-background\">\n    <div class=\"frame-purple pulse-effect\">\n      <div class=\"cta-header\">\n        <span class=\"sparkle\">✨</span>\n        <span class=\"highlight-orange-preview glow-text\">Я подготовил для тебя</span>\n        <span class=\"sparkle\">✨</span>\n      </div>\n      <a href=\"#principles\" target=\"_blank\" class=\"animated-link\"> \n        🧭 принципы великого лидерства - от великого мореплавателя 🧭\n      </a>\n    </div>\n  </div>\n</div>"
-      }
-    },
-    {
-      "title": "Ваше второе видео",
-      "videoUrl": "https://ваша-ссылка-на-видео-2",
-      "previewImage": "ваше-превью-2.jpg",
-      "article": {
-        "title": "Заголовок статьи 2",
-        "content": "<div class='article-text'><p>Содержание второй статьи...</p></div>"
-      }
-    }
-  ]
-}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Редактор статей для JSON</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2980b9;
+            --accent-color: #9b59b6;
+            --warning-color: #f39c12;
+            --success-color: #2ecc71;
+            --error-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --text-color: #333;
+            --border-radius: 8px;
+            --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 30px 0;
+            border-radius: var(--border-radius);
+            margin-bottom: 40px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .app-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+        
+        @media (max-width: 1100px) {
+            .app-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .editor-section, .preview-section {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease;
+        }
+        
+        .editor-section:hover, .preview-section:hover {
+            transform: translateY(-5px);
+        }
+        
+        .section-title {
+            font-size: 1.6rem;
+            margin-bottom: 25px;
+            color: var(--dark-color);
+            border-bottom: 3px solid var(--light-color);
+            padding-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title::before {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 25px;
+            background: linear-gradient(to bottom, var(--primary-color), var(--secondary-color));
+            margin-right: 15px;
+            border-radius: 4px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--dark-color);
+            font-size: 1.1rem;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e1e8ed;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: all 0.3s;
+            background: #fafbfc;
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+            background: white;
+        }
+        
+        textarea {
+            min-height: 200px;
+            resize: vertical;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: var(--light-color);
+            border-radius: var(--border-radius);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .toolbar button {
+            padding: 10px 15px;
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .toolbar button:hover {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+        
+        .toolbar button.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        .highlight-options {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+            width: 100%;
+        }
+        
+        .highlight-option {
+            padding: 10px 20px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border: 2px solid transparent;
+            flex: 1;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .highlight-option.active {
+            border-color: var(--dark-color);
+            transform: scale(1.05);
+        }
+        
+        .highlight-blue {
+            background: linear-gradient(90deg, rgba(52, 152, 219, 0.9) 0%, rgba(52, 152, 219, 0.3) 100%);
+            color: white;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+        
+        .highlight-orange {
+            background: linear-gradient(90deg, rgba(243, 156, 18, 0.9) 0%, rgba(243, 156, 18, 0.3) 100%);
+            color: white;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+        
+        .json-output {
+            background: var(--dark-color);
+            color: var(--light-color);
+            padding: 25px;
+            border-radius: var(--border-radius);
+            margin-top: 25px;
+            font-family: 'Fira Code', monospace;
+            white-space: pre-wrap;
+            max-height: 400px;
+            overflow-y: auto;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.3);
+            border: 1px solid #34495e;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            flex: 1;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(52, 152, 219, 0.4);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+            color: white;
+            box-shadow: 0 4px 10px rgba(149, 165, 166, 0.3);
+        }
+        
+        .btn-secondary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(149, 165, 166, 0.4);
+        }
+        
+        .btn-copy {
+            background: linear-gradient(135deg, var(--success-color), #27ae60);
+            color: white;
+            box-shadow: 0 4px 10px rgba(46, 204, 113, 0.3);
+        }
+        
+        .btn-copy:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(46, 204, 113, 0.4);
+        }
+        
+        .preview-content {
+            border: 2px solid #e1e8ed;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            min-height: 500px;
+            background: white;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        /* Стили для рамок блоков */
+        .frame-blue {
+            border: 3px solid var(--primary-color);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: var(--border-radius);
+            background: rgba(52, 152, 219, 0.05);
+        }
+        
+        .frame-orange {
+            border: 3px solid var(--warning-color);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: var(--border-radius);
+            background: rgba(243, 156, 18, 0.05);
+        }
+        
+        .frame-purple {
+            border: 3px solid var(--accent-color);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: var(--border-radius);
+            background: rgba(155, 89, 182, 0.05);
+        }
+        
+        .frame-green {
+            border: 3px solid var(--success-color);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: var(--border-radius);
+            background: rgba(46, 204, 113, 0.05);
+        }
+        
+        /* Градиентное выделение */
+        .highlight-blue-preview {
+            background: linear-gradient(90deg, rgba(52, 152, 219, 0.9) 0%, rgba(52, 152, 219, 0.3) 100%);
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-weight: 500;
+            border: none;
+        }
+        
+        .highlight-orange-preview {
+            background: linear-gradient(90deg, rgba(243, 156, 18, 0.9) 0%, rgba(243, 156, 18, 0.3) 100%);
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-weight: 500;
+            border: none;
+        }
+        
+        .important-note {
+            padding: 20px;
+            border: 2px solid var(--warning-color);
+            margin: 20px 0;
+            background: linear-gradient(135deg, #fffaf0, #fff5e6);
+            border-radius: var(--border-radius);
+            box-shadow: 0 2px 8px rgba(243, 156, 18, 0.1);
+        }
+        
+        .article-quote {
+            font-style: italic;
+            padding: 20px 25px;
+            background: linear-gradient(135deg, #f8f0ff, #f0e6ff);
+            border-radius: var(--border-radius);
+            margin: 20px 0;
+            border-left: 5px solid var(--accent-color);
+            box-shadow: 0 2px 8px rgba(155, 89, 182, 0.1);
+            color: #6c3483;
+        }
+        
+        .article-list {
+            margin: 20px 0;
+            padding-left: 25px;
+        }
+        
+        .article-list li {
+            margin-bottom: 12px;
+            padding-left: 10px;
+        }
+        
+        .article-subtitle {
+            margin: 25px 0 15px;
+            color: var(--dark-color);
+            font-size: 1.3rem;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--light-color);
+        }
+        
+        .article-image {
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .article-image img {
+            max-width: 100%;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+        
+        .copy-notification {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, var(--success-color), #27ae60);
+            color: white;
+            padding: 15px 25px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            opacity: 0;
+            transition: opacity 0.3s, transform 0.3s;
+            transform: translateX(100px);
+            z-index: 1000;
+            font-weight: 600;
+        }
+        
+        .copy-notification.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        .video-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        
+        @media (max-width: 768px) {
+            .video-info {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+        }
+        
+        .icon {
+            font-size: 1.2rem;
+        }
+        
+        .link-dialog {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1001;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+        
+        .link-dialog.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .link-dialog-content {
+            background: white;
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            width: 90%;
+            max-width: 500px;
+        }
+        
+        .link-dialog h3 {
+            margin-bottom: 20px;
+            color: var(--dark-color);
+        }
+        
+        .link-dialog-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .link-dialog-actions .btn {
+            flex: 1;
+        }
+        
+        a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        a:hover {
+            color: var(--secondary-color);
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Редактор статей для JSON</h1>
+            <p class="subtitle">Создавайте красивые статьи с рамками для блоков текста и получайте готовый JSON</p>
+        </header>
+        
+        <div class="app-container">
+            <section class="editor-section">
+                <h2 class="section-title">Редактор статьи</h2>
+                
+                <div class="video-info">
+                    <div class="form-group">
+                        <label for="videoTitle">Название видео</label>
+                        <input type="text" id="videoTitle" placeholder="Введите название видео" value="Городские закаты">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="videoUrl">URL видео</label>
+                        <input type="url" id="videoUrl" placeholder="https://example.com/video.mp4" value="urban-sunsets.mp4">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="articleTitle">Заголовок статьи</label>
+                    <input type="text" id="articleTitle" placeholder="Введите заголовок статьи" value="Магия городских закатов: почему небо в городе особенное">
+                </div>
+                
+                <div class="form-group">
+                    <label for="articleContent">Содержание статьи</label>
+                    
+                    <div class="toolbar">
+                        <button id="btnBold" title="Жирный текст"><span class="icon"><b>B</b></span> Жирный</button>
+                        <button id="btnItalic" title="Курсив"><span class="icon"><i>I</i></span> Курсив</button>
+                        <button id="btnParagraph" title="Параграф"><span class="icon">¶</span> Параграф</button>
+                        <button id="btnSubtitle" title="Подзаголовок">📝 Подзаголовок</button>
+                    </div>
+                    
+                    <div class="toolbar">
+                        <button id="btnList" title="Список">📋 Список</button>
+                        <button id="btnQuote" title="Цитата">💜 Цитата</button>
+                        <button id="btnImportantNote">⚠️ Важно</button>
+                        <button id="btnLink" title="Ссылка">🔗 Ссылка</button>
+                        <button id="btnNewLine" title="Новая строка">↵ Новая строка</button>
+                    </div>
+                    
+                    <div class="toolbar">
+                        <span style="font-weight: 600; margin-right: 10px;">Выделение градиентом:</span>
+                        <div class="highlight-options">
+                            <div class="highlight-option highlight-blue active" data-class="highlight-blue-preview">🔵 Синий градиент</div>
+                            <div class="highlight-option highlight-orange" data-class="highlight-orange-preview">🟠 Оранжевый градиент</div>
+                        </div>
+                    </div>
+                    
+                    <div class="toolbar">
+                        <span style="font-weight: 600; margin-right: 10px;">Рамки для блоков:</span>
+                        <button id="btnFrameBlue" data-class="frame-blue">🔵 Синяя рамка</button>
+                        <button id="btnFrameOrange" data-class="frame-orange">🟠 Оранжевая рамка</button>
+                        <button id="btnFramePurple" data-class="frame-purple">💜 Фиолетовая рамка</button>
+                        <button id="btnFrameGreen" data-class="frame-green">✅ Зеленая рамка</button>
+                    </div>
+                    
+                    <textarea id="articleContent" placeholder="Начните вводить текст статьи..."><p>Городские закаты обладают уникальной атмосферой, которую невозможно встретить в дикой природе. Отражение солнечных лучей в стеклах небоскребов создает неповторимую игру света и тени.</p><div class="important-note"><p><strong>Интересный факт:</strong> В крупных городах закаты часто кажутся более яркими из-за частиц пыли и загрязнений в воздухе, которые рассеивают свет особым образом.</p></div><h3 class="article-subtitle">Лучшие места для наблюдения</h3><p>Чтобы fully оценить красоту городского заката, стоит выбрать правильную локацию:</p><ul class="article-list"><li>Смотровые площадки высотных зданий</li><li>Набережные и мосты</li><li>Парки на возвышенностях</li></ul><p>Каждый городской пейзаж во время заката рассказывает свою уникальную историю, превращая обычный вечер в незабываемое зрелище.</p></textarea>
+                </div>
+                
+                <div class="actions">
+                    <button class="btn btn-primary" id="btnGenerate">
+                        <span class="icon">🔄</span> Сгенерировать JSON
+                    </button>
+                    <button class="btn btn-secondary" id="btnReset">
+                        <span class="icon">🗑️</span> Сбросить
+                    </button>
+                </div>
+                
+                <div class="form-group">
+                    <label for="jsonOutput">JSON для копирования</label>
+                    <div class="json-output" id="jsonOutput">
+// Сгенерированный JSON появится здесь
+                    </div>
+                    <button class="btn btn-copy" id="btnCopy">
+                        <span class="icon">📋</span> Копировать JSON
+                    </button>
+                </div>
+            </section>
+            
+            <section class="preview-section">
+                <h2 class="section-title">Предпросмотр статьи</h2>
+                <div class="preview-content" id="previewContent">
+                    <p>Предпросмотр статьи появится здесь</p>
+                </div>
+            </section>
+        </div>
+    </div>
+    
+    <div class="copy-notification" id="copyNotification">✅ JSON скопирован в буфер обмена!</div>
+    
+    <div class="link-dialog" id="linkDialog">
+        <div class="link-dialog-content">
+            <h3>Добавить ссылку</h3>
+            <div class="form-group">
+                <label for="linkUrl">URL ссылки</label>
+                <input type="url" id="linkUrl" placeholder="https://example.com">
+            </div>
+            <div class="form-group">
+                <label for="linkText">Текст ссылки</label>
+                <input type="text" id="linkText" placeholder="Текст ссылки">
+            </div>
+            <div class="link-dialog-actions">
+                <button class="btn btn-secondary" id="btnCancelLink">Отмена</button>
+                <button class="btn btn-primary" id="btnInsertLink">Вставить ссылку</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Элементы DOM
+            const videoTitle = document.getElementById('videoTitle');
+            const videoUrl = document.getElementById('videoUrl');
+            const articleTitle = document.getElementById('articleTitle');
+            const articleContent = document.getElementById('articleContent');
+            const jsonOutput = document.getElementById('jsonOutput');
+            const previewContent = document.getElementById('previewContent');
+            const btnGenerate = document.getElementById('btnGenerate');
+            const btnReset = document.getElementById('btnReset');
+            const btnCopy = document.getElementById('btnCopy');
+            const copyNotification = document.getElementById('copyNotification');
+            
+            // Элементы панели инструментов
+            const btnBold = document.getElementById('btnBold');
+            const btnItalic = document.getElementById('btnItalic');
+            const btnParagraph = document.getElementById('btnParagraph');
+            const btnSubtitle = document.getElementById('btnSubtitle');
+            const btnList = document.getElementById('btnList');
+            const btnQuote = document.getElementById('btnQuote');
+            const btnImportantNote = document.getElementById('btnImportantNote');
+            const btnLink = document.getElementById('btnLink');
+            const btnNewLine = document.getElementById('btnNewLine');
+            const btnFrameBlue = document.getElementById('btnFrameBlue');
+            const btnFrameOrange = document.getElementById('btnFrameOrange');
+            const btnFramePurple = document.getElementById('btnFramePurple');
+            const btnFrameGreen = document.getElementById('btnFrameGreen');
+            
+            // Элементы диалога ссылки
+            const linkDialog = document.getElementById('linkDialog');
+            const linkUrl = document.getElementById('linkUrl');
+            const linkText = document.getElementById('linkText');
+            const btnCancelLink = document.getElementById('btnCancelLink');
+            const btnInsertLink = document.getElementById('btnInsertLink');
+            
+            // Опции выделения
+            const highlightOptions = document.querySelectorAll('.highlight-option');
+            
+            let currentHighlightClass = 'highlight-blue-preview';
+            let selectedTextForLink = '';
+            
+            // Функция для вставки новой строки
+            function insertNewLine() {
+                const start = articleContent.selectionStart;
+                const end = articleContent.selectionEnd;
+                
+                // Вставляем тег <br> в текущую позицию курсора
+                const newText = articleContent.value.substring(0, start) + '<br>' + articleContent.value.substring(end);
+                articleContent.value = newText;
+                
+                // Устанавливаем курсор после вставленного <br>
+                articleContent.selectionStart = start + 4;
+                articleContent.selectionEnd = start + 4;
+                
+                // Фокусируем textarea
+                articleContent.focus();
+                
+                // Обновляем предпросмотр
+                updatePreview();
+            }
+            
+            // Функция для сохранения форматирования переносов строк
+            function processContentForJSON(content) {
+                // Заменяем все переносы строк на HTML-теги
+                return content.replace(/\n/g, '<br>');
+            }
+            
+            // Функции форматирования
+            function formatText(tag, className = '', wrapText = true, additionalAttrs = '') {
+                const start = articleContent.selectionStart;
+                const end = articleContent.selectionEnd;
+                const selectedText = articleContent.value.substring(start, end);
+                
+                if (selectedText || !wrapText) {
+                    let formattedText = '';
+                    
+                    if (tag === 'span' && className) {
+                        formattedText = `<span class="${className}">${selectedText}</span>`;
+                    } else if (tag === 'h3') {
+                        formattedText = `<h3 class="article-subtitle">${selectedText}</h3>`;
+                    } else if (tag === 'blockquote') {
+                        formattedText = `<div class="article-quote">${selectedText}</div>`;
+                    } else if (tag === 'div') {
+                        if (className === 'important-note') {
+                            formattedText = `<div class="important-note"><p><strong>Интересный факт:</strong> ${selectedText}</p></div>`;
+                        } else if (className.startsWith('frame-')) {
+                            formattedText = `<div class="${className}">${selectedText}</div>`;
+                        }
+                    } else if (tag === 'ul') {
+                        formattedText = `<ul class="article-list">${selectedText}</ul>`;
+                    } else if (tag === 'a') {
+                        formattedText = `<a href="${className}"${additionalAttrs}>${selectedText || linkText.value}</a>`;
+                    } else {
+                        formattedText = `<${tag}>${selectedText}</${tag}>`;
+                    }
+                    
+                    const newText = wrapText 
+                        ? articleContent.value.substring(0, start) + formattedText + articleContent.value.substring(end)
+                        : formattedText;
+                    
+                    articleContent.value = newText;
+                    
+                    // Обновляем предпросмотр
+                    updatePreview();
+                }
+            }
+            
+            // Обработчики кнопок форматирования
+            btnBold.addEventListener('click', () => formatText('strong'));
+            btnItalic.addEventListener('click', () => formatText('em'));
+            btnParagraph.addEventListener('click', () => formatText('p'));
+            btnSubtitle.addEventListener('click', () => formatText('h3'));
+            btnList.addEventListener('click', () => formatText('ul'));
+            btnQuote.addEventListener('click', () => formatText('blockquote'));
+            btnImportantNote.addEventListener('click', () => formatText('div', 'important-note'));
+            btnNewLine.addEventListener('click', insertNewLine);
+            
+            // Обработчики рамок
+            btnFrameBlue.addEventListener('click', () => formatText('div', 'frame-blue'));
+            btnFrameOrange.addEventListener('click', () => formatText('div', 'frame-orange'));
+            btnFramePurple.addEventListener('click', () => formatText('div', 'frame-purple'));
+            btnFrameGreen.addEventListener('click', () => formatText('div', 'frame-green'));
+            
+            // Обработчик ссылки
+            btnLink.addEventListener('click', function() {
+                const start = articleContent.selectionStart;
+                const end = articleContent.selectionEnd;
+                selectedTextForLink = articleContent.value.substring(start, end);
+                
+                linkText.value = selectedTextForLink;
+                linkUrl.value = '';
+                linkDialog.classList.add('show');
+            });
+            
+            // Обработчики диалога ссылки
+            btnCancelLink.addEventListener('click', function() {
+                linkDialog.classList.remove('show');
+            });
+            
+            btnInsertLink.addEventListener('click', function() {
+                if (linkUrl.value) {
+                    formatText('a', linkUrl.value, true, ' target="_blank"');
+                    linkDialog.classList.remove('show');
+                }
+            });
+            
+            // Обработчик выделения градиентом
+            function applyHighlight() {
+                formatText('span', currentHighlightClass);
+            }
+            
+            // Обработчики выбора типа выделения
+            highlightOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    highlightOptions.forEach(opt => opt.classList.remove('active'));
+                    this.classList.add('active');
+                    currentHighlightClass = this.getAttribute('data-class');
+                    
+                    // Применяем выделение к выбранному тексту
+                    applyHighlight();
+                });
+            });
+            
+            // Обновление предпросмотра при вводе
+            articleContent.addEventListener('input', updatePreview);
+            articleTitle.addEventListener('input', updatePreview);
+            videoTitle.addEventListener('input', updatePreview);
+            
+            // Функция обновления предпросмотра
+            function updatePreview() {
+                const vidTitle = videoTitle.value || 'Название видео';
+                const artTitle = articleTitle.value || 'Заголовок статьи';
+                const content = articleContent.value || '<p>Содержание статьи</p>';
+                
+                previewContent.innerHTML = `
+                    <h2>${vidTitle}</h2>
+                    <h3>${artTitle}</h3>
+                    <div class="article-text">${content}</div>
+                `;
+            }
+            
+            // Генерация JSON
+            btnGenerate.addEventListener('click', function() {
+                const vidTitle = videoTitle.value || 'Название видео';
+                const vidUrl = videoUrl.value || 'video.mp4';
+                const artTitle = articleTitle.value || 'Заголовок статьи';
+                const content = processContentForJSON(articleContent.value) || '<p>Содержание статьи</p>';
+                
+                const videoJSON = {
+                    "title": vidTitle,
+                    "videoUrl": vidUrl,
+                    "article": {
+                        "title": artTitle,
+                        "content": `<div class="article-text">${content}</div>`
+                    }
+                };
+                
+                jsonOutput.textContent = JSON.stringify(videoJSON, null, 4);
+            });
+            
+            // Копирование JSON
+            btnCopy.addEventListener('click', function() {
+                const jsonText = jsonOutput.textContent;
+                
+                if (jsonText && jsonText !== '// Сгенерированный JSON появится здесь') {
+                    navigator.clipboard.writeText(jsonText).then(() => {
+                        copyNotification.classList.add('show');
+                        setTimeout(() => {
+                            copyNotification.classList.remove('show');
+                        }, 3000);
+                    });
+                }
+            });
+            
+            // Сброс формы
+            btnReset.addEventListener('click', function() {
+                videoTitle.value = '';
+                videoUrl.value = '';
+                articleTitle.value = '';
+                articleContent.value = '';
+                jsonOutput.textContent = '// Сгенерированный JSON появится здесь';
+                previewContent.innerHTML = '<p>Предпросмотр статьи появится здесь</p>';
+            });
+            
+            // Инициализация предпросмотра
+            updatePreview();
+            
+            // Автогенерация JSON при загрузке
+            setTimeout(() => {
+                btnGenerate.click();
+            }, 500);
+        });
+    </script>
+</body>
+</html>
