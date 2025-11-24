@@ -307,23 +307,37 @@
             box-shadow: inset 0 2px 10px rgba(0,0,0,0.05);
         }
         
-        /* Исправленные стили для выделения */
-        .text-accent {
-            color: var(--accent-color);
-            font-weight: 600;
-            border: 2px solid var(--accent-color);
-            padding: 2px 6px;
-            border-radius: 4px;
-            background: transparent;
+        /* Стили для рамок блоков */
+        .frame-blue {
+            border: 3px solid var(--primary-color);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: var(--border-radius);
+            background: rgba(52, 152, 219, 0.05);
         }
         
-        .text-warning {
-            color: var(--warning-color);
-            font-weight: 600;
-            border: 2px solid var(--warning-color);
-            padding: 2px 6px;
-            border-radius: 4px;
-            background: transparent;
+        .frame-orange {
+            border: 3px solid var(--warning-color);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: var(--border-radius);
+            background: rgba(243, 156, 18, 0.05);
+        }
+        
+        .frame-purple {
+            border: 3px solid var(--accent-color);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: var(--border-radius);
+            background: rgba(155, 89, 182, 0.05);
+        }
+        
+        .frame-green {
+            border: 3px solid var(--success-color);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: var(--border-radius);
+            background: rgba(46, 204, 113, 0.05);
         }
         
         /* Градиентное выделение */
@@ -371,32 +385,6 @@
         .article-list li {
             margin-bottom: 12px;
             padding-left: 10px;
-        }
-        
-        .badge {
-            display: inline-block;
-            padding: 5px 10px;
-            border-radius: 15px;
-            font-size: 0.85rem;
-            font-weight: bold;
-            margin-right: 10px;
-            color: white;
-        }
-        
-        .badge-primary { 
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); 
-        }
-        .badge-accent { 
-            background: linear-gradient(135deg, var(--accent-color), #8e44ad); 
-        }
-        .badge-success { 
-            background: linear-gradient(135deg, var(--success-color), #27ae60); 
-        }
-        .badge-warning { 
-            background: linear-gradient(135deg, var(--warning-color), #e67e22); 
-        }
-        .badge-error { 
-            background: linear-gradient(135deg, var(--error-color), #c0392b); 
         }
         
         .article-subtitle {
@@ -526,7 +514,7 @@
     <div class="container">
         <header>
             <h1>Редактор статей для JSON</h1>
-            <p class="subtitle">Создавайте красивые статьи с градиентным выделением и получайте готовый JSON</p>
+            <p class="subtitle">Создавайте красивые статьи с рамками для блоков текста и получайте готовый JSON</p>
         </header>
         
         <div class="app-container">
@@ -577,21 +565,14 @@
                     </div>
                     
                     <div class="toolbar">
-                        <span style="font-weight: 600; margin-right: 10px;">Стиль текста:</span>
-                        <button id="btnTextAccent" data-class="text-accent">💜 Акцентный (рамка)</button>
-                        <button id="btnTextWarning" data-class="text-warning">🟠 Предупреждение (рамка)</button>
+                        <span style="font-weight: 600; margin-right: 10px;">Рамки для блоков:</span>
+                        <button id="btnFrameBlue" data-class="frame-blue">🔵 Синяя рамка</button>
+                        <button id="btnFrameOrange" data-class="frame-orange">🟠 Оранжевая рамка</button>
+                        <button id="btnFramePurple" data-class="frame-purple">💜 Фиолетовая рамка</button>
+                        <button id="btnFrameGreen" data-class="frame-green">✅ Зеленая рамка</button>
                     </div>
                     
-                    <div class="toolbar">
-                        <span style="font-weight: 600; margin-right: 10px;">Бейджи:</span>
-                        <button id="btnBadgePrimary" data-class="badge-primary">🔵 Основной</button>
-                        <button id="btnBadgeAccent" data-class="badge-accent">💜 Акцентный</button>
-                        <button id="btnBadgeSuccess" data-class="badge-success">✅ Успех</button>
-                        <button id="btnBadgeWarning" data-class="badge-warning">⚠️ Предупреждение</button>
-                        <button id="btnBadgeError" data-class="badge-error">❌ Ошибка</button>
-                    </div>
-                    
-                    <textarea id="articleContent" placeholder="Начните вводить текст статьи..."><p>Городские закаты обладают <span class="text-accent">уникальной атмосферой</span>, которую невозможно встретить в дикой природе. Отражение солнечных лучей в стеклах небоскребов создает неповторимую игру света и тени.</p><div class="important-note"><p><strong>Интересный факт:</strong> В крупных городах закаты часто кажутся более яркими из-за частиц пыли и загрязнений в воздухе, которые рассеивают свет особым образом.</p></div><h3 class="article-subtitle">Лучшие места для наблюдения</h3><p>Чтобы fully оценить красоту городского заката, стоит выбрать правильную локацию:</p><ul class="article-list"><li><span class="badge badge-primary">1</span> Смотровые площадки высотных зданий</li><li><span class="badge badge-accent">2</span> Набережные и мосты</li><li><span class="badge badge-success">3</span> Парки на возвышенностях</li></ul><p>Каждый городской пейзаж во время заката рассказывает свою <span class="text-warning">уникальную историю</span>, превращая обычный вечер в незабываемое зрелище.</p></textarea>
+                    <textarea id="articleContent" placeholder="Начните вводить текст статьи..."><p>Городские закаты обладают уникальной атмосферой, которую невозможно встретить в дикой природе. Отражение солнечных лучей в стеклах небоскребов создает неповторимую игру света и тени.</p><div class="important-note"><p><strong>Интересный факт:</strong> В крупных городах закаты часто кажутся более яркими из-за частиц пыли и загрязнений в воздухе, которые рассеивают свет особым образом.</p></div><h3 class="article-subtitle">Лучшие места для наблюдения</h3><p>Чтобы fully оценить красоту городского заката, стоит выбрать правильную локацию:</p><ul class="article-list"><li>Смотровые площадки высотных зданий</li><li>Набережные и мосты</li><li>Парки на возвышенностях</li></ul><p>Каждый городской пейзаж во время заката рассказывает свою уникальную историю, превращая обычный вечер в незабываемое зрелище.</p></textarea>
                 </div>
                 
                 <div class="actions">
@@ -667,13 +648,10 @@
             const btnImportantNote = document.getElementById('btnImportantNote');
             const btnLink = document.getElementById('btnLink');
             const btnNewLine = document.getElementById('btnNewLine');
-            const btnTextAccent = document.getElementById('btnTextAccent');
-            const btnTextWarning = document.getElementById('btnTextWarning');
-            const btnBadgePrimary = document.getElementById('btnBadgePrimary');
-            const btnBadgeAccent = document.getElementById('btnBadgeAccent');
-            const btnBadgeSuccess = document.getElementById('btnBadgeSuccess');
-            const btnBadgeWarning = document.getElementById('btnBadgeWarning');
-            const btnBadgeError = document.getElementById('btnBadgeError');
+            const btnFrameBlue = document.getElementById('btnFrameBlue');
+            const btnFrameOrange = document.getElementById('btnFrameOrange');
+            const btnFramePurple = document.getElementById('btnFramePurple');
+            const btnFrameGreen = document.getElementById('btnFrameGreen');
             
             // Элементы диалога ссылки
             const linkDialog = document.getElementById('linkDialog');
@@ -732,13 +710,13 @@
                     } else if (tag === 'div') {
                         if (className === 'important-note') {
                             formattedText = `<div class="important-note"><p><strong>Интересный факт:</strong> ${selectedText}</p></div>`;
+                        } else if (className.startsWith('frame-')) {
+                            formattedText = `<div class="${className}">${selectedText}</div>`;
                         }
                     } else if (tag === 'ul') {
-                        formattedText = `<ul class="article-list"><li><span class="badge badge-primary">1</span> ${selectedText}</li></ul>`;
+                        formattedText = `<ul class="article-list">${selectedText}</ul>`;
                     } else if (tag === 'a') {
                         formattedText = `<a href="${className}"${additionalAttrs}>${selectedText || linkText.value}</a>`;
-                    } else if (tag === 'badge') {
-                        formattedText = `<span class="badge ${className}">${selectedText}</span>`;
                     } else {
                         formattedText = `<${tag}>${selectedText}</${tag}>`;
                     }
@@ -764,6 +742,12 @@
             btnImportantNote.addEventListener('click', () => formatText('div', 'important-note'));
             btnNewLine.addEventListener('click', insertNewLine);
             
+            // Обработчики рамок
+            btnFrameBlue.addEventListener('click', () => formatText('div', 'frame-blue'));
+            btnFrameOrange.addEventListener('click', () => formatText('div', 'frame-orange'));
+            btnFramePurple.addEventListener('click', () => formatText('div', 'frame-purple'));
+            btnFrameGreen.addEventListener('click', () => formatText('div', 'frame-green'));
+            
             // Обработчик ссылки
             btnLink.addEventListener('click', function() {
                 const start = articleContent.selectionStart;
@@ -786,17 +770,6 @@
                     linkDialog.classList.remove('show');
                 }
             });
-            
-            // Обработчики стилей текста (рамки)
-            btnTextAccent.addEventListener('click', () => formatText('span', 'text-accent'));
-            btnTextWarning.addEventListener('click', () => formatText('span', 'text-warning'));
-            
-            // Обработчики бейджей
-            btnBadgePrimary.addEventListener('click', () => formatText('badge', 'badge-primary'));
-            btnBadgeAccent.addEventListener('click', () => formatText('badge', 'badge-accent'));
-            btnBadgeSuccess.addEventListener('click', () => formatText('badge', 'badge-success'));
-            btnBadgeWarning.addEventListener('click', () => formatText('badge', 'badge-warning'));
-            btnBadgeError.addEventListener('click', () => formatText('badge', 'badge-error'));
             
             // Обработчик выделения градиентом
             function applyHighlight() {
